@@ -1,13 +1,15 @@
-package com.beshara.fintech;
+package com.beshara.fintech.payment;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+
 @SpringBootApplication
-public class FintechParentApplication {
+public class PaymentApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FintechParentApplication.class, args);
+		SpringApplication.run(PaymentApplication.class, args);
 	}
 
+	
 }

@@ -10,6 +10,7 @@
 	</parent>
 	<groupId>com.beshara.fintech</groupId>
 	<artifactId>fintech-parent</artifactId>
+	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>fintech-parent</name>
 	<description>fintech parent project</description>
@@ -44,4 +45,8 @@
 		</plugins>
 	</build>
 
+	<modules>
+		<module>payment</module>
+		<module>customer</module>
+	</modules>
 </project>
