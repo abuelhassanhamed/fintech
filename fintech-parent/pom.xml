@@ -49,5 +49,6 @@
 		<module>payment</module>
 		<module>customer</module>
 		<module>fintech-gateway</module>
+		<module>product</module>
 	</modules>
 </project>
