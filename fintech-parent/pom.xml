@@ -55,5 +55,6 @@
 		<module>product-review</module>
 		<module>product-recommendation</module>
 		<module>notification</module>
+		<module>fintech-config</module>
 	</modules>
 </project>
