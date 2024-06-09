@@ -11,8 +11,5 @@
 	<artifactId>product-recommendation</artifactId>
 	<name>product-recommendation</name>
 	<description>Demo project for Spring Boot</description>
-	<properties>
-		<java.version>17</java.version>
-	</properties>
-
+	
 </project>
