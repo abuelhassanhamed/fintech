@@ -17,7 +17,7 @@ pipeline {
     
     stage('Build') { 
             steps {
-                sh 'cd fintech-parent && ./mvn -B -DskipTests clean package' 
+                sh 'cd fintech-parent && ls' 
             }
         }   
        
