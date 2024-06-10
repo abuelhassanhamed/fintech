@@ -1,36 +1,29 @@
+Jenkinsfile (Declarative Pipeline)
 pipeline {
-     agent any
-   
+    agent any
+    tools {
+        maven 'mvn3_9_7'
+        jdk 'jdk17'
+    }
     stages {
-       
-       stage ('Initialize') {
+        stage ('Initialize') {
             steps {
                 sh '''
-                   export M2_HOME=/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/mvn3_9_7 >> ~/.bashrc
-                   export PATH=${M2_HOME}/bin:${PATH} >> ~/.bashrc
                     echo "PATH = ${PATH}"
                     echo "M2_HOME = ${M2_HOME}"
-                 '''
+                '''
             }
         }
-    
-    
-    stage('Build') { 
+
+        stage ('Build') {
             steps {
-             
-
-                   sh '''
-                    export M2_HOME=/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/mvn3_9_7 >> ~/.bashrc
-                   export PATH=${M2_HOME}/bin:${PATH} >> ~/.bashrc
-                    echo "PATH = ${PATH}"
-                    echo "M2_HOME = ${M2_HOME}"
-                   mvn -f fintech-parent/pom.xml -B -DskipTests clean package
-                  '''
-
-             
-               
+                sh 'mvn -Dmaven.test.failure.ignore=true install' 
             }
-        }   
-       
+            post {
+                success {
+                    junit 'target/surefire-reports/**/*.xml' 
+                }
+            }
+        }
     }
 }
