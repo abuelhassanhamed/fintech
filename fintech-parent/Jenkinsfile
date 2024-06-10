@@ -17,10 +17,12 @@ pipeline {
     
     stage('Build') { 
             steps {
-                container ('maven'){
-                     sh ' mvn -f fintech-parent/pom.xml -B -DskipTests clean package' 
-                }
+              container(){
 
+                   sh 'mvn -B -DskipTests clean package'
+
+              }
+  
                
             }
         }   
