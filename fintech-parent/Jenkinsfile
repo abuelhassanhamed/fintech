@@ -17,12 +17,11 @@ pipeline {
     
     stage('Build') { 
             steps {
-              container(){
+             
 
                    sh 'mvn -B -DskipTests clean package'
 
-              }
-  
+             
                
             }
         }   
