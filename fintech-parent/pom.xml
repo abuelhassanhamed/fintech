@@ -18,7 +18,7 @@
 		<java.version>11</java.version>
 		 <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <docker.host> tcp://172.18.160.1:2375 </docker.host>
+    <docker.host> tcp://host.docker.internal:2375 </docker.host>
 	</properties>
 	<dependencies>
 		<dependency>
