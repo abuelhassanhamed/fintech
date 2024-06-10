@@ -6,6 +6,8 @@ pipeline {
        stage ('Initialize') {
             steps {
                 sh '''
+                    echo 'export M2_HOME=/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/mvn3_9_7' >> ~/.bashrc
+                    echo 'export PATH=${M2_HOME}/bin:${PATH}' >> ~/.bashrc
                     echo "PATH = ${PATH}"
                     echo "M2_HOME = ${M2_HOME}"
                  '''
