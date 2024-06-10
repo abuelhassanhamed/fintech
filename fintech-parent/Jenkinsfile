@@ -3,12 +3,12 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh '#!/bin/bash mvn -B -DskipTests clean package'
+                sh "#!/bin/bash \n" + ' mvn -B -DskipTests clean package'
             }
         }
         stage('Test') { 
             steps {
-                sh '#!/bin/bash mvn test' 
+                sh "#!/bin/bash \n" + ' mvn test' 
             }
             post {
                 always {
