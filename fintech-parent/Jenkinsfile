@@ -7,12 +7,13 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh "#!/bin/bash \n" + ' mvn -B -DskipTests clean package'
+               
+                sh  'mvn -B -DskipTests clean package'
             }
         }
         stage('Test') { 
             steps {
-                sh "#!/bin/bash \n" + ' mvn test' 
+                sh 'mvn test' 
             }
             post {
                 always {
