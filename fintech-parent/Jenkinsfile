@@ -17,7 +17,7 @@ pipeline {
 
         stage ('Build') {
             steps {
-                sh 'mvn -f fintech-parent/pom.xml -B -DskipTests clean package' 
+                sh 'mvn -f fintech-parent/pom.xml -B -DskipTests clean package -Pjenkins' 
             }
             post {
                 success {
