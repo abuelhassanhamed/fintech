@@ -1,0 +1,93 @@
+version: "3.8"
+services:
+  fintech-customer:
+    image: fintech/customer
+    container_name: fintech-customer
+    ports:
+      - 9080:8080
+    networks:
+     - fintech-network
+  fintech-order:
+    image: fintech/order
+    container_name: fintech-order
+    ports:
+      - 9081:8080
+    networks:
+     - fintech-network
+  fintech-product:
+    image: fintech/product
+    container_name: fintech-product
+    ports:
+      - 9082:8080
+    networks:
+     - fintech-network
+  fintech-payment:
+    image : fintech/payment
+   # build: 
+    # context: payment
+    container_name: fintech-payment
+    ports: # host port : container port
+      - 9083:8080
+    networks:
+     - fintech-network
+  fintech-config:
+    image : fintech/fintech-config
+   # build: 
+    # context: payment
+    container_name: fintech-config
+    ports:
+      - target: 8080 # container port
+        published : 9084 # host port
+    networks:
+     - fintech-network
+  fintech-gateway:
+    image : fintech/fintech-gateway
+   # build: 
+    # context: payment
+    container_name: fintech-gateway
+    ports:
+      - 9085:8080
+    networks:
+     - fintech-network
+  fintech-notification:
+    image : fintech/notification
+   # build: 
+    # context: payment
+    container_name: fintech-notification
+    ports:
+      - 9086:8080
+    networks:
+     - fintech-network
+  fintech-product-recommendation:
+    image : fintech/product-recommendation
+   # build: 
+    # context: payment
+    container_name: fintech-product-recommendation
+    ports:
+      - 9087:8080
+    networks:
+     - fintech-network
+  fintech-product-search:
+    image : fintech/product-search
+   # build: 
+    # context: payment
+    container_name: fintech-product-search
+    ports:
+      - 9088:8080
+    networks:
+     - fintech-network
+  fintech-product-review:
+    image : fintech/product-review
+   # build: 
+    # context: payment
+    container_name: fintech-product-review
+    ports:
+      - 9089:8080
+    networks:
+     - fintech-network
+  
+networks:
+ fintech-network:
+volumes:
+  fintech-volume:
+  

@@ -25,5 +25,17 @@ pipeline {
                 }
             }
         }
+        
+         stage ('install') {
+            steps {
+                sh 'mvn -f fintech-parent/pom.xml -B -DskipTests install -Pjenkins' 
+            }
+            post {
+                success {
+                    sh 'echo deploy done successfuly' 
+                }
+            }
+        }
+        
     }
 }
