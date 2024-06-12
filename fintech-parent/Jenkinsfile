@@ -32,7 +32,7 @@ pipeline {
             }
             post {
                 success {
-                    sh 'echo deploy done successfuly' 
+                    sh 'echo deploy done successfuly ' 
                 }
             }
         }

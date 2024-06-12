@@ -1,0 +1,38 @@
+
+services:
+  order-db:
+   image: mysql:8.4.0
+   environment : 
+    - MYSQL_ROOT_PASSWORD=root_password
+   ports:
+    - 3306:3306
+   networks:
+    - fintech-network
+  customer-db:
+   image: mysql:8.4.0
+   environment : 
+    - MYSQL_ROOT_PASSWORD=root_password
+   ports:
+    - 3307:3306
+   networks:
+    - fintech-network
+  payment-db:
+   image: mysql:8.4.0
+   environment : 
+    - MYSQL_ROOT_PASSWORD=root_password
+   ports:
+    - 3308:3306
+   networks:
+    - fintech-network   
+  product-db:
+   image: mysql:8.4.0
+   environment : 
+    - MYSQL_ROOT_PASSWORD=root_password
+   ports:
+    - 3309:3306
+   networks:
+    - fintech-network   
+networks:
+ fintech-network:
+volumes:
+ fintech-volume:
