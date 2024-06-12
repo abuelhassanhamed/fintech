@@ -107,6 +107,15 @@
 	 <properties>
 		 <docker.host> tcp://host.docker.internal:2375 </docker.host>
 	</properties>
+	
+	<distributionManagement>
+   <snapshotRepository>
+      <id>nexus-snapshots</id>
+      <url>http://host.docker.internal:8081/repository/fintech_snapshots/</url>
+   </snapshotRepository>
+</distributionManagement>
+
+	
  </profile>
 	
 </profiles>
