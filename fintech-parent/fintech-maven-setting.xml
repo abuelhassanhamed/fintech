@@ -1,0 +1,30 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+  
+  <servers>
+    <server>
+        <id>beshara-internal-snapshots</id>
+      <username>admin</username>
+      <password>admin123456789</password>
+      
+    </server>
+ <server>
+        <id>beshara-internal</id>
+      <username>admin</username>
+      <password>admin123456789</password>
+      
+    </server>
+   <server>
+      <id>nexus-snapshots</id>
+      <username>admin</username>
+      <password>hossam_25112003</password>
+   </server>
+  </servers>
+<!-- <proxies>
+ <proxy>
+   <active>true</active>
+   <host>https://artifacts.alfresco.com/nexus/content/repositories/public/</host>
+   <port>80</port>
+ </proxy>
+</proxies> -->
+</settings>

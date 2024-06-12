@@ -28,7 +28,7 @@ pipeline {
         
          stage ('install') {
             steps {
-                sh 'mvn -f fintech-parent/pom.xml -B -DskipTests deploy -Pjenkins' 
+                sh 'mvn --settings fintech-parent/fintech-maven-setting.xml -f fintech-parent/pom.xml -B -DskipTests deploy -Pjenkins' 
             }
             post {
                 success {
