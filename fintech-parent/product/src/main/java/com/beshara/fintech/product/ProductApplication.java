@@ -40,11 +40,12 @@ public class ProductApplication {
 	@GetMapping(value = "/products")
 	List<Product> getProducts()
 	{
+	
 		List products=new ArrayList<Product>();
 		
 		Product product=new Product();
 		product.setId(UUID.randomUUID().toString());
-		product.setDescription("skaffold with port forward");
+		product.setDescription("skaffold with port   سسسسforwardيييي");
 		products.add(product);
 		products.add(product);
 		products.add(product);
