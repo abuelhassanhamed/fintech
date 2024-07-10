@@ -1,0 +1,13 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: product
+build:
+  artifacts:
+    - image: product
+      context: target/classes/META-INF/maven/com.beshara.fintech/product
+      buildpacks:
+        builder: gcr.io/buildpacks/builder:v1
+manifests:
+  rawYaml:
+    - deployment.yaml

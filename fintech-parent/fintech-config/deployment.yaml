@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fintech-config
+  labels:
+    app: fintech-config
+spec:
+  ports:
+  - port: 9091
+    protocol: TCP
+  clusterIP: None
+  selector:
+    app: fintech-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fintech-config
+  labels:
+    app: fintech-config
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fintech-config
+  template:
+    metadata:
+      labels:
+        app: fintech-config
+    spec:
+      containers:
+      - name: fintech-config
+        image: fintech-config

@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fintech-web
+  labels:
+    app: fintech-web
+spec:
+  clusterIP: None
+  selector:
+    app: fintech-web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fintech-web
+  labels:
+    app: fintech-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fintech-web
+  template:
+    metadata:
+      labels:
+        app: fintech-web
+    spec:
+      containers:
+      - name: fintech-web
+        image: fintech-web

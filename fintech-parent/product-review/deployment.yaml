@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-review
+  labels:
+    app: product-review
+spec:
+  ports:
+  - port: 9097
+    protocol: TCP
+  clusterIP: None
+  selector:
+    app: product-review
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-review
+  labels:
+    app: product-review
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-review
+  template:
+    metadata:
+      labels:
+        app: product-review
+    spec:
+      containers:
+      - name: product-review
+        image: product-review

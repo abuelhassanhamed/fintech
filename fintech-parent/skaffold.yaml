@@ -1,0 +1,60 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: fintech-parent
+build:
+  artifacts:
+    - image: customer
+      jib:
+      # project can be the relative directory
+       project: customer
+    - image: fintech-config
+      jib:
+      # project can be the relative directory
+       project: fintech-config
+    - image: fintech-gateway
+      jib:
+      # project can be the relative directory
+       project: fintech-gateway
+   
+    - image: notification
+      jib:
+      # project can be the relative directory
+       project: notification
+    - image: order
+      jib:
+      # project can be the relative directory
+       project: order
+    - image: product-recommendation
+      jib:
+      # project can be the relative directory
+       project:  product-recommendation
+    - image: product-review
+      jib:
+      # project can be the relative directory
+       project: product-review
+    - image: product-search
+      jib:
+      # project can be the relative directory
+       project: product-search
+    - image: product
+      jib:
+      # project can be the relative directory
+       project: product
+manifests:
+  rawYaml:
+    - customer/deployment.yaml
+    - fintech-config/deployment.yaml
+    - fintech-gateway/deployment.yaml
+    - product/deployment.yaml
+    - notification/deployment.yaml
+    - order/deployment.yaml
+    - product-recommendation/deployment.yaml
+    - product-review/deployment.yaml
+    - product-search/deployment.yaml
+portForward:
+- resourceType: Service
+  resourceName: product
+  namespace: default
+  port: 8080
+  localPort: 8090 # *Optional*

@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fintech-gateway
+  labels:
+    app: fintech-gateway
+spec:
+  ports:
+  - port: 9092
+    protocol: TCP
+  clusterIP: None
+  selector:
+    app: fintech-gateway
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fintech-gateway
+  labels:
+    app: fintech-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fintech-gateway
+  template:
+    metadata:
+      labels:
+        app: fintech-gateway
+    spec:
+      containers:
+      - name: fintech-gateway
+        image: fintech-gateway

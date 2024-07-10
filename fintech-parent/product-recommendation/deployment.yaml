@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-recommendation
+  labels:
+    app: product-recommendation
+spec:
+  ports:
+  - port: 9096
+    protocol: TCP
+  clusterIP: None
+  selector:
+    app: product-recommendation
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-recommendation
+  labels:
+    app: product-recommendation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-recommendation
+  template:
+    metadata:
+      labels:
+        app: product-recommendation
+    spec:
+      containers:
+      - name: product-recommendation
+        image: product-recommendation
