@@ -1,0 +1,305 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: customer
+  name: customer
+spec:
+  clusterIP: None
+  ports:
+    - port: 9090
+      protocol: TCP
+  selector:
+    app: customer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: customer
+  name: customer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer
+  template:
+    metadata:
+      labels:
+        app: customer
+    spec:
+      containers:
+        - image: customer:10739d558a7f459236ecb6019d20c3c0ae53491c10ff572f6abb494dcdc8df5f
+          name: customer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: fintech-config
+  name: fintech-config
+spec:
+  clusterIP: None
+  ports:
+    - port: 9091
+      protocol: TCP
+  selector:
+    app: fintech-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: fintech-config
+  name: fintech-config
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fintech-config
+  template:
+    metadata:
+      labels:
+        app: fintech-config
+    spec:
+      containers:
+        - image: fintech-config:cbcc66acc7f61fbe7825256c6fe93040f7113202d9df2711f70476292e288b54
+          name: fintech-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: fintech-gateway
+  name: fintech-gateway
+spec:
+  clusterIP: None
+  ports:
+    - port: 9092
+      protocol: TCP
+  selector:
+    app: fintech-gateway
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: fintech-gateway
+  name: fintech-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fintech-gateway
+  template:
+    metadata:
+      labels:
+        app: fintech-gateway
+    spec:
+      containers:
+        - image: fintech-gateway:8e8809f417f47c21bfa9d893f656e4b74627a6dc3258f8c47f96816db7e9bddb
+          name: fintech-gateway
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: product
+  name: product
+spec:
+  clusterIP: None
+  ports:
+    - port: 8080
+      protocol: TCP
+  selector:
+    app: product
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: product
+  name: product
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product
+  template:
+    metadata:
+      labels:
+        app: product
+    spec:
+      containers:
+        - image: product:07f074a3a11d1a966528dfd6fd175da975e2cb0b2479e8e2a7ea798f8ae972ca
+          name: product
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: notification
+  name: notification
+spec:
+  clusterIP: None
+  ports:
+    - port: 9093
+      protocol: TCP
+  selector:
+    app: notification
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: notification
+  name: notification
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+        - image: notification:209e1faacb395150a28a85cd68bd24c1e14201e203b176e39671e3b227bde343
+          name: notification
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: order
+  name: order
+spec:
+  clusterIP: None
+  ports:
+    - port: 9094
+      protocol: TCP
+  selector:
+    app: order
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: order
+  name: order
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      containers:
+        - image: order:3ac5942c01200ca9d52bb657f618bce63541b221a326f7fb8cbaf57b58148d84
+          name: order
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: product-recommendation
+  name: product-recommendation
+spec:
+  clusterIP: None
+  ports:
+    - port: 9096
+      protocol: TCP
+  selector:
+    app: product-recommendation
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: product-recommendation
+  name: product-recommendation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-recommendation
+  template:
+    metadata:
+      labels:
+        app: product-recommendation
+    spec:
+      containers:
+        - image: product-recommendation:b443510e3793fb22f0435371fbdf67905d1375225957c7ea26dc0e83cad6fc6c
+          name: product-recommendation
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: product-review
+  name: product-review
+spec:
+  clusterIP: None
+  ports:
+    - port: 9097
+      protocol: TCP
+  selector:
+    app: product-review
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: product-review
+  name: product-review
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-review
+  template:
+    metadata:
+      labels:
+        app: product-review
+    spec:
+      containers:
+        - image: product-review:a500e6503792d021100eacd69edbf5b766f9b90e15ca93edd37833fc8e95cca9
+          name: product-review
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: product-search
+  name: product-search
+spec:
+  clusterIP: None
+  ports:
+    - port: 9098
+      protocol: TCP
+  selector:
+    app: product-search
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: product-search
+  name: product-search
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-search
+  template:
+    metadata:
+      labels:
+        app: product-search
+    spec:
+      containers:
+        - image: product-search:84e9e25039818fee54eea6b66ce83809ce82b9de39fc3d950d1af92ca29ad620
+          name: product-search
