@@ -121,7 +121,7 @@ metadata:
     app: product
   name: product
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: product
@@ -131,7 +131,7 @@ spec:
         app: product
     spec:
       containers:
-        - image: product:07f074a3a11d1a966528dfd6fd175da975e2cb0b2479e8e2a7ea798f8ae972ca
+        - image: product:f987952b4d3e89237b71b2dcc66b1db60c47da3167f5484defdb057ebf5a9bac
           name: product
 ---
 apiVersion: v1
