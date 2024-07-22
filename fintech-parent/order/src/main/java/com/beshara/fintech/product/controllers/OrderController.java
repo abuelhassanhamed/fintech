@@ -1,6 +1,7 @@
 package com.beshara.fintech.product.controllers;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,25 +25,12 @@ public class OrderController {
 	private OrderRepository orderRepo;
 	
 	@GetMapping(value = "/order")
-	public Order getOrder() {
+	public List<Order> getOrder() {
 		
-		return null;
+		return (List<Order>) orderRepo.findAll();
 	}
 
-	@GetMapping(value = "/demo")
-	public Order getDemoOrder() {
-		
-		Order order=new Order();
-		order.setCustomerId(UUID.randomUUID().toString());
-		order.setId(UUID.randomUUID().toString());
-		order.setOrderDate(new Date());
-		OrderLine orderLine=new OrderLine();
-		orderLine.setOrderId(order.getId());
-		orderLine.setProductId(UUID.randomUUID().toString());
-		orderLine.setQuantity(3);
-		
-		return null;
-	}
+	
 	@PostMapping(value = "/order")	
 public Order placeOrder(@RequestBody Order order) {
 		

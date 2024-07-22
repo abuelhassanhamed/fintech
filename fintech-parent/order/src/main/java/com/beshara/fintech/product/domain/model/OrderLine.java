@@ -11,15 +11,15 @@ public class OrderLine {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
 	
-	private String orderId;
+//	private String orderId;
 	private String productId;
 	private Integer quantity;
-	public String getOrderId() {
-		return orderId;
-	}
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
+//	public String getOrderId() {
+//		return orderId;
+//	}
+//	public void setOrderId(String orderId) {
+//		this.orderId = orderId;
+//	}
 	public String getProductId() {
 		return productId;
 	}
