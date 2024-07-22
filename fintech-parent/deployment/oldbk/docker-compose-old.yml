@@ -1,0 +1,170 @@
+version: "3.0"
+services:
+ checkout-services:
+  depends_on:
+   - kafka
+   - db-mysql 
+  image: ecommerce/checkout
+  container_name: checkout
+  ports:
+    - 8080:8080
+  environment:
+    - spring.cloud.stream.kafka.binder.defaultBrokerPort=29092
+    - spring.cloud.stream.kafka.binder.brokers=kafka
+    - spring.datasource.url=jdbc:mysql://db-mysql:3306/checkout
+    - spring.flyway.url=jdbc:mysql://db-mysql:3306/checkout
+  networks:
+    ecommerce-net:
+ order-services:
+  depends_on:
+   - kafka
+   - db-mysql-order
+  image: ecommerce/order
+  container_name: order
+  ports:
+    - 8082:8082
+  environment:
+    - spring.cloud.stream.kafka.binder.defaultBrokerPort=29092
+    - spring.cloud.stream.kafka.binder.brokers=kafka
+    - spring.datasource.url=jdbc:mysql://db-mysql-order:3306/orderdb
+  networks:
+    ecommerce-net:
+ zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+    networks:
+     ecommerce-net:
+ kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://host.docker.internal:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks: 
+     ecommerce-net:
+ kafkaui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafkaui
+    depends_on:
+      - kafka
+    ports:
+      - 8081:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    networks:
+     ecommerce-net:
+ jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - 4318:4318
+      - 16686:16686
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks: 
+     ecommerce-net:
+# Observability
+
+ grafana:
+    image: grafana/grafana:9.1.2
+    container_name: grafana
+    depends_on:
+     
+      - prometheus
+     
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=user
+      - GF_SECURITY_ADMIN_PASSWORD=password
+    volumes:
+      - ./docker/observability/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./docker/observability/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./docker/observability/grafana/grafana.ini:/etc/grafana/grafana.ini
+    networks: 
+      ecommerce-net:
+ prometheus:
+    image: prom/prometheus:v2.38.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks: 
+     ecommerce-net:
+
+ db-mysql:
+    container_name: db-mysql
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=debezium
+      - MYSQL_USER=checkoutuser
+      - MYSQL_PASSWORD=checkoutpassword
+      - MYSQL_DATABASE=checkout
+    networks: 
+     ecommerce-net:
+ db-mysql-order:
+    container_name: db-mysql-order
+    image: mysql
+    
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=debezium
+      - MYSQL_USER=orderdbuser
+      - MYSQL_PASSWORD=orderdbpassword
+      - MYSQL_DATABASE=orderdb
+    networks: 
+     ecommerce-net:
+ connect:
+    container_name: connect
+    image: quay.io/debezium/connect
+    ports:
+      - "8083:8083"
+    depends_on:
+      - kafka
+      - db-mysql
+      - db-mysql-order
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - GROUP_ID=1
+      - CONFIG_STORAGE_TOPIC=my_connect_configs
+      - OFFSET_STORAGE_TOPIC=my_connect_offsets
+      - STATUS_STORAGE_TOPIC=my_connect_statuses
+      - ENABLE_DEBEZIUM_KC_REST_EXTENSION=true
+      - ENABLE_DEBEZIUM_SCRIPTING=true
+      - CONNECT_REST_EXTENSION_CLASSES=io.debezium.kcrestextension.DebeziumConnectRestExtension
+     
+    networks: 
+     ecommerce-net:
+ 
+
+ debezium-ui:
+    container_name: debezium-ui
+    image: quay.io/debezium/debezium-ui:${DEBEZIUM_VERSION:-2.4}
+    ports:
+      - "8084:8080"
+    environment:
+      - KAFKA_CONNECT_URIS=http://connect:8083
+    depends_on:
+      - connect  
+    networks: 
+     ecommerce-net:    
+networks:
+  ecommerce-net:

@@ -28,6 +28,9 @@ services:
    image: mysql:8.4.0
    environment : 
     - MYSQL_ROOT_PASSWORD=root_password
+    - MYSQL_DATABASE=product
+    - MYSQL_PASSWORD=product_password
+    - MYSQL_USER=product_user
    ports:
     - 3309:3306
    networks:

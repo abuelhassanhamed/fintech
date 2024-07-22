@@ -1,0 +1,203 @@
+version: "3.0"
+services:
+# kafka connect and debezium ui
+ connect:
+ #this will build the image to my own repository then we should call docker push  hossamaboelhassan/strimzi-connect
+    image: hossamaboelhassan/strimzi-connect
+    container_name: connect
+    build:
+      context: docker/debezium-strimzi
+      args:
+        DEBEZIUM_CONNECTOR_VERSION: "${DEBEZIUM_CONNECTOR_VERSION:-2.4.0.Final}"
+        STRIMZI_VERSION: "${STRIMZI_VERSION:-latest-kafka-3.5.1}"
+    ports:
+     - 8083:8083
+    links:
+     - kafka
+    
+    environment:
+     - KAFKA_LOG4J_OPTS=-Dlog4j.configuration=file:/opt/kafka/config/connect-log4j.properties
+     - KAFKA_CONNECT_BOOTSTRAP_SERVERS=kafka:9092
+     - |
+         KAFKA_CONNECT_CONFIGURATION=
+         key.converter=org.apache.kafka.connect.json.JsonConverter
+         value.converter=org.apache.kafka.connect.json.JsonConverter
+         key.converter.schemas.enable=false
+         value.converter.schemas.enable=false
+         group.id=connect
+         offset.storage.topic=connect-offsets
+         offset.storage.replication.factor=1
+         config.storage.topic=connect-configs
+         config.storage.replication.factor=1
+         status.storage.topic=connect-status
+         status.storage.replication.factor=1
+         producer.interceptor.classes=io.debezium.tracing.DebeziumTracingProducerInterceptor
+         otel.instrumentation.common.default-enabled=false
+     - OTEL_SERVICE_NAME=kafka-connect
+     - OTEL_TRACES_EXPORTER=otlp
+     - OTEL_METRICS_EXPORTER=none
+     - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+     - OTEL_TRACES_SAMPLER=always_on
+     - STRIMZI_TRACING=opentelemetry
+    command: /opt/kafka/kafka_connect_run.sh
+    networks: 
+     fintech-network:
+ debezium-ui:
+    container_name: debezium-ui
+    image: quay.io/debezium/debezium-ui:${DEBEZIUM_VERSION:-2.4}
+    ports:
+      - "8074:8080"
+    environment:
+      - KAFKA_CONNECT_URIS=http://connect:8083
+    depends_on:
+      - connect  
+    networks: 
+     fintech-network:    
+
+#kafka
+ zookeeper:
+    image: docker.io/bitnami/zookeeper
+    ports:
+      - "2181:2181"
+    volumes:
+      - "zookeeper_data:/bitnami"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+     fintech-network:
+ kafka:
+    image: docker.io/bitnami/kafka
+    ports:
+      - "9092:9092"
+    volumes:
+      - "kafka_data:/bitnami"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS= PLAINTEXT://kafka:9092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME= PLAINTEXT
+    networks:
+     fintech-network:
+    depends_on:
+      - zookeeper
+ kafkaui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafkaui
+    depends_on:
+      - kafka
+    ports:
+      - 8071:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    networks:
+     fintech-network: 
+ # Observability
+ 
+ jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - 4317:4317
+      - 4318:4318
+      - 16686:16686
+      - 6831:6831/udp
+     
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks: 
+     fintech-network:
+
+
+ grafana:
+    image: grafana/grafana:9.1.2
+    container_name: grafana
+    depends_on:
+     
+      - prometheus
+     
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=user
+      - GF_SECURITY_ADMIN_PASSWORD=password
+    volumes:
+      - ./docker/observability/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./docker/observability/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./docker/observability/grafana/grafana.ini:/etc/grafana/grafana.ini
+    networks: 
+      fintech-network:
+ prometheus:
+    image: prom/prometheus:v2.38.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks: 
+     fintech-network:
+ # security
+ polar-keycloak:
+   image: quay.io/keycloak/keycloak:22.0.0
+   container_name: "keycloak"
+   command: start-dev
+   environment:
+    - KEYCLOAK_ADMIN=user
+    - KEYCLOAK_ADMIN_PASSWORD=password
+   ports:
+    - 8090:8080 
+   networks: 
+     fintech-network:
+ # database
+ order-db:
+   image: mysql:8.4.0
+   environment : 
+    - MYSQL_ROOT_PASSWORD=root_password
+    - MYSQL_DATABASE=order
+    - MYSQL_PASSWORD=order_password
+    - MYSQL_USER=order_user
+   ports:
+    - 3306:3306
+   networks:
+    - fintech-network
+ customer-db:
+   image: mysql:8.4.0
+   environment : 
+    - MYSQL_ROOT_PASSWORD=root_password
+    - MYSQL_DATABASE=customer
+    - MYSQL_PASSWORD=customer_password
+    - MYSQL_USER=customer_user
+   ports:
+    - 3307:3306
+   networks:
+    - fintech-network
+ payment-db:
+   image: mysql:8.4.0
+   environment : 
+    - MYSQL_ROOT_PASSWORD=root_password
+    - MYSQL_DATABASE=payment
+    - MYSQL_PASSWORD=payment_password
+    - MYSQL_USER=payment_user
+   ports:
+    - 3308:3306
+   networks:
+    - fintech-network   
+ product-db:
+   image: mysql:8.4.0
+   environment : 
+    - MYSQL_ROOT_PASSWORD=root_password
+    - MYSQL_DATABASE=product
+    - MYSQL_PASSWORD=product_password
+    - MYSQL_USER=product_user
+   ports:
+    - 3309:3306
+   networks:
+    - fintech-network   
+networks:
+ fintech-network:
+volumes:
+ fintech-volume:
+ zookeeper_data:
+    driver: local
+ kafka_data:
+    driver: local

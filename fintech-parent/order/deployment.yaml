@@ -6,9 +6,9 @@ metadata:
     app: order
 spec:
   ports:
-  - port: 9094
-    protocol: TCP
-  clusterIP: None
+    - port: 8092
+      targetPort: 8080
+      protocol: TCP
   selector:
     app: order
 ---
@@ -31,3 +31,6 @@ spec:
       containers:
       - name: order
         image: order
+        env:
+         - name : SPRING_DATASOURCE_URL
+           value : jdbc:mysql://order-db:3306/order

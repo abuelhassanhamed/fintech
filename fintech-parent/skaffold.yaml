@@ -56,5 +56,40 @@ portForward:
 - resourceType: Service
   resourceName: product
   namespace: default
-  port: 8080
-  localPort: 8090 # *Optional*
+  port: 8091
+  localPort: 8091 # *Optional* 
+- resourceType: Service
+  resourceName: order
+  namespace: default
+  port: 8092
+  localPort: 8092 # *Optional*
+- resourceType: Service
+  resourceName: kafkaui
+  namespace: default
+  port: 8071
+  localPort: 8071 # *Optional*
+- resourceType: Service
+  resourceName: debezium-ui
+  namespace: default
+  port: 8074
+  localPort: 8074 # *Optional*
+- resourceType: Service
+  resourceName: camunda-platform-tasklist
+  namespace: default
+  port: 80
+  localPort: 70 # *Optional*
+- resourceType: Service
+  resourceName: camunda-platform-operate
+  namespace: default
+  port: 80
+  localPort: 71 # *Optional*
+- resourceType: Service
+  resourceName: order-db
+  namespace: default
+  port: 3306
+  localPort: 3306 # *Optional*
+- resourceType: Service
+  resourceName: product-db
+  namespace: default
+  port: 3309
+  localPort: 3309 # *Optional*

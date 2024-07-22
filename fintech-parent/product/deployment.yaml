@@ -6,9 +6,9 @@ metadata:
     app: product
 spec:
   ports:
-  - port: 8080
-    protocol: TCP
-  clusterIP: None
+   - port: 8091
+     targetPort: 8080  
+     protocol: TCP
   selector:
     app: product
 ---
@@ -31,3 +31,6 @@ spec:
       containers:
       - name: product
         image: product
+        env:
+         - name : SPRING_DATASOURCE_URL
+           value : jdbc:mysql://product-db:3309/product

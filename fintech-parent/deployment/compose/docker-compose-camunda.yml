@@ -1,0 +1,154 @@
+version: "3.0"
+services:
+
+
+ 
+    
+ zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+    networks:
+     ecommerce-net:
+ kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://host.docker.internal:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks: 
+     ecommerce-net:
+ kafkaui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafkaui
+    depends_on:
+      - kafka
+    ports:
+      - 8071:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    networks:
+     ecommerce-net:
+ connect:
+    image: debezium/strimzi-connect
+    container_name: connect
+    build:
+      context: docker/debezium-strimzi
+      args:
+        DEBEZIUM_CONNECTOR_VERSION: "${DEBEZIUM_CONNECTOR_VERSION:-2.4.0.Final}"
+        STRIMZI_VERSION: "${STRIMZI_VERSION:-latest-kafka-3.5.1}"
+    ports:
+     - 8083:8083
+    links:
+     - kafka
+     - db-mysql
+    environment:
+     - KAFKA_LOG4J_OPTS=-Dlog4j.configuration=file:/opt/kafka/config/connect-log4j.properties
+     - KAFKA_CONNECT_BOOTSTRAP_SERVERS=kafka:29092
+     - |
+         KAFKA_CONNECT_CONFIGURATION=
+         key.converter=org.apache.kafka.connect.json.JsonConverter
+         value.converter=org.apache.kafka.connect.json.JsonConverter
+         key.converter.schemas.enable=false
+         value.converter.schemas.enable=false
+         group.id=connect
+         offset.storage.topic=connect-offsets
+         offset.storage.replication.factor=1
+         config.storage.topic=connect-configs
+         config.storage.replication.factor=1
+         status.storage.topic=connect-status
+         status.storage.replication.factor=1
+         producer.interceptor.classes=io.debezium.tracing.DebeziumTracingProducerInterceptor
+         otel.instrumentation.common.default-enabled=false
+     - OTEL_SERVICE_NAME=kafka-connect
+     - OTEL_TRACES_EXPORTER=otlp
+     - OTEL_METRICS_EXPORTER=none
+     - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+     - OTEL_TRACES_SAMPLER=always_on
+     - STRIMZI_TRACING=opentelemetry
+    command: /opt/kafka/kafka_connect_run.sh
+    networks: 
+     ecommerce-net:
+ debezium-ui:
+    container_name: debezium-ui
+    image: quay.io/debezium/debezium-ui:${DEBEZIUM_VERSION:-2.4}
+    ports:
+      - "8074:8080"
+    environment:
+      - KAFKA_CONNECT_URIS=http://connect:8083
+    depends_on:
+      - connect  
+    networks: 
+     ecommerce-net:    
+
+
+ jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - 4317:4317
+      
+      - 4318:4318
+      - 16686:16686
+      - 6831:6831/udp
+     
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks: 
+     ecommerce-net:
+# Observability
+
+ grafana:
+    image: grafana/grafana:9.1.2
+    container_name: grafana
+    depends_on:
+     
+      - prometheus
+     
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=user
+      - GF_SECURITY_ADMIN_PASSWORD=password
+    volumes:
+      - ./docker/observability/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./docker/observability/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./docker/observability/grafana/grafana.ini:/etc/grafana/grafana.ini
+    networks: 
+      ecommerce-net:
+ prometheus:
+    image: prom/prometheus:v2.38.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks: 
+     ecommerce-net:
+ # secirotu
+ polar-keycloak:
+   image: quay.io/keycloak/keycloak:22.0.0
+   container_name: "keycloak"
+   command: start-dev
+   environment:
+    - KEYCLOAK_ADMIN=user
+    - KEYCLOAK_ADMIN_PASSWORD=password
+   ports:
+    - 8090:8080 
+   networks: 
+     ecommerce-net:
+networks:
+  ecommerce-net:

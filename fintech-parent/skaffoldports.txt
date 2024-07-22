@@ -1,0 +1,32 @@
+portForward:
+- resourceType: Service
+  resourceName: product
+  namespace: default
+  port: 8080
+  localPort: 8090 # *Optional*
+- resourceType: Service
+  resourceName: order
+  namespace: default
+  port: 8080
+  localPort: 8091 # *Optional*
+- resourceType: Service
+  resourceName: product-db
+  namespace: default
+  port: 3309
+  localPort: 3309 # *Optional*
+- resourceType: Service
+  resourceName: order-db
+  namespace: default
+  port: 3306
+  localPort: 3310 # *Optional*
+- resourceType: Service
+  resourceName: grafana
+  namespace: default
+  port: 3000
+  localPort: 3000 # *Optional*
+- resourceType: Service
+  resourceName: debezium-ui
+  namespace: default
+  port: 8074 
+  localPort: 8074  # *Optional*  
+  
