@@ -15,7 +15,7 @@ import io.camunda.zeebe.spring.client.annotation.Deployment;
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
 
 @SpringBootApplication
-//@Deployment(resources = "classpath:order.bpmn")
+@Deployment(resources = "classpath:order.bpmn")
 public class OrderApplication {
 
 	public static void main(String[] args) {
@@ -25,10 +25,10 @@ public class OrderApplication {
 	
 	}
 
-//    @JobWorker(type = "OrderReviewedEvent")
-//	public void handleJobFoo() {
-//	  System.out.println("order reviewed 4");
-//	}
+    @JobWorker(type = "OrderReviewedEvent")
+	public void handleJobFoo() {
+	  System.out.println("order reviewed 4");
+	}
     
 //	@KafkaListener(id = "ORDERGROUP", topics = "order-flow")
 //    public void listen(String in) {

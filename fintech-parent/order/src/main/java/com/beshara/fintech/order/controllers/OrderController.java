@@ -58,6 +58,7 @@ public Order placeOrder(@RequestBody Order order) {
 	}
 	
  @DeleteMapping (value = "/order")	
+ 
 public boolean deleteOrder(@RequestBody Order order) {
 		
 	//	 order=new Order();
