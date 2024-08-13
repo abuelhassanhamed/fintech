@@ -93,3 +93,20 @@ portForward:
   namespace: default
   port: 3309
   localPort: 3309 # *Optional*
+- resourceType: Service
+  resourceName: camunda-platform-zeebe-gateway
+  namespace: default
+  port: 26500 
+  localPort: 26500 # *Optional*
+  
+- resourceType: Service
+  resourceName: jaeger
+  namespace: default
+  port: 16686 
+  localPort: 16686 # *Optional*
+
+- resourceType: Service
+  resourceName: connect
+  namespace: default
+  port: 8083 
+  localPort: 8083 # *Optional*

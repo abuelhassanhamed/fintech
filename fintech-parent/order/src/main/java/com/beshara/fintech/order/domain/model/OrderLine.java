@@ -1,4 +1,4 @@
-package com.beshara.fintech.product.domain.model;
+package com.beshara.fintech.order.domain.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

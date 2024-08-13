@@ -1,10 +1,12 @@
-package com.beshara.fintech.product.controllers;
+package com.beshara.fintech.order.controllers;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,9 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.beshara.fintech.product.domain.model.Order;
-import com.beshara.fintech.product.domain.model.OrderLine;
-import com.beshara.fintech.product.domain.model.OrderRepository;
+import com.beshara.fintech.order.domain.events.OrderCreatedEvent;
+import com.beshara.fintech.order.domain.model.Order;
+import com.beshara.fintech.order.domain.model.OrderLine;
+import com.beshara.fintech.order.domain.model.OrderRepository;
 
 @RestController
 @RequestMapping("/fintech/order/api")
@@ -23,6 +26,9 @@ public class OrderController {
 	
 	@Autowired
 	private OrderRepository orderRepo;
+
+	@Autowired
+	private StreamBridge orderPublisher;
 	
 	@GetMapping(value = "/order")
 	public List<Order> getOrder() {
@@ -31,7 +37,7 @@ public class OrderController {
 	}
 
 	
-	@PostMapping(value = "/order")	
+@PostMapping(value = "/order")	
 public Order placeOrder(@RequestBody Order order) {
 		
 	//	 order=new Order();
@@ -44,6 +50,10 @@ public Order placeOrder(@RequestBody Order order) {
 	//	orderLine.setQuantity(3);
 	//	order.getOrderDetails().add(orderLine);
 		order=orderRepo.save(order);
+		OrderCreatedEvent orderCreatedEvent=new OrderCreatedEvent();
+		orderCreatedEvent.setPayload(order);
+		orderPublisher.send("order-flow-binding", orderCreatedEvent);
+		//orderPublisher.se
 		return order;
 	}
 	

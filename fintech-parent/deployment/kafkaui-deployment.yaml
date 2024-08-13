@@ -23,7 +23,7 @@ spec:
       containers:
         - env:
             - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
-              value: kafka:9092
+              value: my-cluster-kafka-bootstrap:9092
             - name: KAFKA_CLUSTERS_0_NAME
               value: local
           image: provectuslabs/kafka-ui:latest
