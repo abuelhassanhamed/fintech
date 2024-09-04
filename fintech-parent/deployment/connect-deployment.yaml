@@ -25,7 +25,7 @@ spec:
             - /opt/kafka/kafka_connect_run.sh
           env:
             - name: KAFKA_CONNECT_BOOTSTRAP_SERVERS
-              value: kafka:9092
+              value: my-cluster-kafka-bootstrap:9092
             - name: KAFKA_CONNECT_CONFIGURATION
               value: |2
                 key.converter=org.apache.kafka.connect.json.JsonConverter

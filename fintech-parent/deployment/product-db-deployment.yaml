@@ -35,4 +35,9 @@ spec:
           ports:
             - containerPort: 3306
               protocol: TCP
+          volumeMounts:
+            - name: productdb-data
+              mountPath: /var/lib/mysql
       restartPolicy: Always
+      volumes:
+        - name: productdb-data

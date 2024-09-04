@@ -103,6 +103,27 @@
   <groupId>org.springframework.cloud</groupId>
   <artifactId>spring-cloud-stream-binder-kafka</artifactId>
 </dependency>	
+
+<dependency>
+	
+    <groupId>com.beshara.fintech</groupId>
+  <artifactId>fintech-events</artifactId>
+    <version>0.0.2-SNAPSHOT</version>
+</dependency>
+		
+		
+ <dependency>
+    <groupId>io.cloudevents</groupId>
+    <artifactId>cloudevents-kafka</artifactId>
+    <version>4.0.0</version>
+</dependency>		
+		
+		
+<dependency>
+    <groupId>io.cloudevents</groupId>
+    <artifactId>cloudevents-spring</artifactId>
+    <version>4.0.0</version>
+</dependency>		
 		
 	</dependencies>
 

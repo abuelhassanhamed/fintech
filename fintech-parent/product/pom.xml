@@ -76,13 +76,53 @@
   <groupId>org.springframework.cloud</groupId>
   <artifactId>spring-cloud-stream-binder-kafka</artifactId>
 </dependency>	
+
+	<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		
+		
+		
+			 <dependency>
+     <groupId>io.micrometer</groupId>
+     <artifactId>micrometer-tracing-bridge-otel</artifactId>
+  </dependency>
+  <dependency>
+     <groupId>io.opentelemetry</groupId>
+     <artifactId>opentelemetry-exporter-otlp</artifactId>
+  </dependency>
 <!-- 
 <dependency>
   <groupId>org.springframework.kafka</groupId>
   <artifactId>spring-kafka</artifactId>
   
 </dependency-->
+	<dependency>
 	
+    <groupId>com.beshara.fintech</groupId>
+  <artifactId>fintech-events</artifactId>
+    <version>0.0.2-SNAPSHOT</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/io.github.springwolf/springwolf-kafka -->
+<dependency>
+    <groupId>io.github.springwolf</groupId>
+    <artifactId>springwolf-kafka</artifactId>
+    <version>1.5.0</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/io.github.springwolf/springwolf-cloud-stream -->
+<dependency>
+    <groupId>io.github.springwolf</groupId>
+    <artifactId>springwolf-cloud-stream</artifactId>
+    <version>1.5.0</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/io.github.springwolf/springwolf-ui -->
+<dependency>
+    <groupId>io.github.springwolf</groupId>
+    <artifactId>springwolf-ui</artifactId>
+    <version>1.5.0</version>
+</dependency>
 
 		
 	</dependencies>

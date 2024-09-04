@@ -1,0 +1,11 @@
+FROM node:alpine3.20
+WORKDIR /app/
+EXPOSE 3000
+CMD ["npm", "start"]
+COPY package.json /app/
+COPY webpack.config.js /app/
+RUN mkdir node_modules
+RUN npm install -g pnpm
+RUN pnpm  install
+COPY public/ /app/public
+COPY src/ /app/src

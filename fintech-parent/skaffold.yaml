@@ -8,6 +8,15 @@ build:
       jib:
       # project can be the relative directory
        project: customer
+    - image: fintech-web
+      docker:
+      # project can be the relative directory
+       dockerfile: ./fintech-web/Dockerfile
+      context: fintech-web
+       
+      # buildArgs:
+       # -context: fintech-web
+      #  -aa: ./fintech-web
     - image: fintech-config
       jib:
       # project can be the relative directory
@@ -44,6 +53,7 @@ build:
 manifests:
   rawYaml:
     - customer/deployment.yaml
+    - fintech-web/deployment.yaml
     - fintech-config/deployment.yaml
     - fintech-gateway/deployment.yaml
     - product/deployment.yaml
@@ -110,3 +120,26 @@ portForward:
   namespace: default
   port: 8083 
   localPort: 8083 # *Optional*
+# exposing kubernetes infrasture services to local environment 
+- resourceType: Service
+  resourceName: my-cluster-kafka-bootstrap
+  namespace: default
+  port: 9092 
+  localPort: 9092 # *Optional*
+  
+  # exposing kubernetes infrasture services to local environment 
+- resourceType: Service
+  resourceName: order-db
+  namespace: default
+  port: 3306  
+  localPort: 3306  # *Optional*
+- resourceType: Service
+  resourceName: polar-keycloak
+  namespace: default
+  port: 8090  
+  localPort: 72  # *Optional*
+- resourceType: Service
+  resourceName: fintech-web
+  namespace: default
+  port: 3000  
+  localPort: 3000  # *Optional*
