@@ -7,6 +7,7 @@ metadata:
 spec:
   ports:
   - port: 9093
+    targetPort: 9093
     protocol: TCP
   clusterIP: None
   selector:

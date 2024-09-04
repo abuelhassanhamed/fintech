@@ -143,3 +143,8 @@ portForward:
   namespace: default
   port: 3000  
   localPort: 3000  # *Optional*
+- resourceType: Service
+  resourceName: notification
+  namespace: default
+  port: 9093  
+  localPort: 9093  # *Optional*
